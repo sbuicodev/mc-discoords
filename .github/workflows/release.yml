@@ -1,0 +1,62 @@
+# Builds the mod for every Minecraft version and publishes the jars as a GitHub release.
+# Triggered by pushing a tag matching the mod version, e.g. `git tag v1.1.0 && git push origin v1.1.0`.
+# The release notes are the `## <tag>` section of CHANGELOG.md.
+
+name: release
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v7
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+      - name: check tag matches mod version
+        id: version
+        run: |
+          version=$(sed -nE 's/^mod\.version *= *"(.*)"/\1/p' stonecutter.properties.toml)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME doesn't match mod.version $version in stonecutter.properties.toml"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: extract changelog
+        run: |
+          # Takes the `## <tag>` section of CHANGELOG.md, up to the next section
+          awk -v tag="$GITHUB_REF_NAME" '$0 == "## " tag { found = 1; next } found && /^## / { exit } found { print }' CHANGELOG.md \
+            | sed -e '/./,$!d' > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::CHANGELOG.md has no '## $GITHUB_REF_NAME' section"
+            exit 1
+          fi
+      - name: setup jdk
+        uses: actions/setup-java@v6
+        with:
+          # 21 for 1.21.x, 25 for 26.1+
+          java-version: |
+            21
+            25
+          distribution: 'temurin'
+      - name: setup gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: true
+      - name: build
+        # Point Gradle toolchains at the JDKs installed above
+        run: ./gradlew buildAndCollect -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64
+      - name: publish github release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: Discoords ${{ steps.version.outputs.version }}
+          body_path: release-notes.md
+          fail_on_unmatched_files: true
+          # Mod jars only, sources jars end with `-sources.jar`
+          files: build/libs/${{ steps.version.outputs.version }}/discoords-*[0-9].jar

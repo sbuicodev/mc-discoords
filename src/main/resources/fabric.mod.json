@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "discoords",
+	"id": "${id}",
 	"version": "${version}",
-	"name": "Discoords",
+	"name": "${name}",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
 		"Me!"
@@ -20,9 +20,9 @@
 		]
 	},
 	"depends": {
-		"fabricloader": ">=0.18.3",
-		"minecraft": "~1.21.11",
-		"java": ">=21",
+		"fabricloader": ">=${loader}",
+		"minecraft": "${minecraft}",
+		"java": ">=${java}",
 		"fabric-api": "*"
 	}
 }
