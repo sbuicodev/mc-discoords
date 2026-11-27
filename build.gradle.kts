@@ -42,6 +42,9 @@ dependencies {
     bundled("net.dv8tion:JDA:${property("deps.jda")}") {
         exclude(module = "opus-java") // Voice support, unused
     }
+    bundled("club.minnced:discord-webhooks:0.8.4") {
+        exclude(group = "com.squareup.okhttp3") // Uses the OkHttp that JDA bundles
+    }
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

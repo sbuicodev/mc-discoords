@@ -22,7 +22,7 @@ public class Discoords implements ModInitializer {
             return;
         }
 
-        LOGGER.info("Connected to channel \"#{}\" on guild \"{}\"", discord.getChannelName(), discord.getGuildName());
+        LOGGER.info("Posting to {}", discord.describe());
 
         new CommandRegistry().register(new SendCoordinatesCommand(discord));
     }
