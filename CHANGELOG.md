@@ -3,14 +3,20 @@
 Each section is named after the release tag it belongs to (`## <mod.version>`).
 The release workflow publishes the section matching the pushed tag as the GitHub release notes.
 
-## 1.2.0
+## 1.2.1
 
 ### Added
 - `/dc` can post through a webhook (`webhook` in the config), so the message shows the player's name and head as its author.
-- Unit tests for the message text, the config and webhook posting.
+- Webhook URLs for a thread or a forum post (`?thread_id=...`) post into that thread.
+- Unit tests for the message text, the config, the webhook URL and webhook posting.
 
 ### Changed
 - Coordinates in the Overworld are posted without a dimension; other dimensions are still written.
+- Players whose name Discord doesn't accept as an author ("discord" or "clyde" in it, or exactly "everyone" or "here") are written at the end of the message instead.
+- A message still waiting on Discord's rate limit after a minute is dropped and logged, instead of being posted late.
+- A failed post is logged once, on one line, without the webhook URL.
+- The config file is written back only when it misses an option, and never left half written.
+- The build and release workflows run the tests, so a release with a failing test isn't published.
 
 ### Deprecated
 - Posting through the bot. It's used only when no webhook is set, and will be removed in a future version.
