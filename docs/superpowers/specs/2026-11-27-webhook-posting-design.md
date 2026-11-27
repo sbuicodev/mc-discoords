@@ -60,6 +60,43 @@ A `webhook` value the library rejects as not a Discord webhook URL logs an error
 - `ConfigProvider` gains a constructor taking the file, the current one keeps `config/discoords.json`.
 - `discord-webhooks` moves from `implementation` to `bundled` in `build.gradle.kts`, so it ships in the jar.
 
+**Predicted files** (`+` new, `~` changed, the rest untouched):
+
+```
+build.gradle.kts                          ~ discord-webhooks moves to bundled
+CHANGELOG.md                              ~ ## 1.2.0
+README.md                                 ~ webhook setup, `webhook` option, tests in the AI list
+src/main/java/net/hawkelele/discoords/
+├── Discoords.java                        ~ picks the mode, deprecation warning, closes on server stop
+├── commands/
+│   ├── Command.java
+│   ├── CoordinatesMessage.java           + the /dc text: coordinates and dimension, Overworld left out
+│   ├── DimensionNames.java
+│   └── SendCoordinatesCommand.java       ~ uses CoordinatesMessage, passes the player to DiscordService
+├── config/
+│   ├── Config.java                       ~ `webhook` field, usesWebhook()
+│   └── ConfigProvider.java               ~ constructor taking the file, writes missing keys back
+├── exceptions/
+│   └── DiscordServiceException.java
+├── registry/
+│   └── CommandRegistry.java
+└── services/
+    ├── DiscordService.java               ~ bot or webhook, sendMessage(text, player), close()
+    ├── MessageSignature.java             + the " ~ *[player]*" suffix
+    └── WebhookMessages.java              + the webhook message: author, avatar, no mentions, name fallback
+src/test/java/net/hawkelele/discoords/
+├── commands/
+│   ├── CoordinatesMessageTest.java       +
+│   └── DimensionNamesTest.java
+├── config/
+│   ├── ConfigTest.java                   +
+│   └── ConfigProviderTest.java           +
+└── services/
+    ├── DiscordServiceTest.java           + webhook posting through a fake HTTP client
+    ├── MessageSignatureTest.java         +
+    └── WebhookMessagesTest.java          +
+```
+
 **Tests** (JUnit, no Discord):
 - message text in both modes, rounding, the Overworld left out, other dimensions written, the forbidden-name fallback;
 - the webhook message, including mentions turned off;
