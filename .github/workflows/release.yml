@@ -49,9 +49,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
         with:
           cache-read-only: true
-      - name: build
+      - name: test and build
         # Point Gradle toolchains at the JDKs installed above
-        run: ./gradlew buildAndCollect -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64
+        # `build` runs the tests on every version first: a failing test stops the jars from being published
+        run: ./gradlew build buildAndCollect -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64
       - name: publish github release
         uses: softprops/action-gh-release@v3
         with:
