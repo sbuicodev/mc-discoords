@@ -3,6 +3,21 @@
 Each section is named after the release tag it belongs to (`## <mod.version>`).
 The release workflow publishes the section matching the pushed tag as the GitHub release notes.
 
+## 1.2.0
+
+### Added
+- `/dc` can post through a webhook (`webhook` in the config), so the message shows the player's name and head as its author.
+- Unit tests for the message text, the config and webhook posting.
+
+### Changed
+- Coordinates in the Overworld are posted without a dimension; other dimensions are still written.
+
+### Deprecated
+- Posting through the bot. It's used only when no webhook is set, and will be removed in a future version.
+
+### Fixed
+- `/dc` can no longer ping people, like with `/dc @everyone`.
+
 ## 1.1.2
 
 ### Fixed
