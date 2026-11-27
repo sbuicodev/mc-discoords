@@ -37,6 +37,17 @@ public class Discoords implements ModInitializer {
                 LOGGER.warn("Failed to load config. Mod is not properly initialized.");
                 return null;
             }
+
+            if (config.usesWebhook()) {
+                try {
+                    return DiscordService.connectWebhook(config.webhook.trim());
+                } catch (IllegalArgumentException e) {
+                    // Never log the URL itself: it holds the webhook's token
+                    LOGGER.error("\"webhook\" in {} isn't a Discord webhook URL; posting through the bot instead", ConfigProvider.CONFIG_FILE);
+                }
+            }
+
+            LOGGER.warn("Posting through the bot is deprecated and will be removed in a future version; set \"webhook\" in {}", ConfigProvider.CONFIG_FILE);
             return DiscordService.connect(config.token, config.guild, config.channel);
         } catch (InvalidTokenException e) {
             // Never log the token itself: logs get shared
