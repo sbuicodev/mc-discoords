@@ -87,6 +87,7 @@ The jars end up in `versions/<minecraft>/build/libs/`; `./gradlew buildAndCollec
 > - migrating the build to Stonecutter, to support several Minecraft versions
 > - writing the initial version of this README
 > - writing the unit tests
+> - writing validators, parsers and sanitizers for strings and URLs
 > - other minor changes
 >
 > Every change is thoroughly reviewed by a human.
