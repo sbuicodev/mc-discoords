@@ -19,7 +19,7 @@ posts this message to the channel, with Steve's name and head as the author:
 - Every player can use `/dc`.
 - Mentions are turned off, so `/dc @everyone` doesn't ping anyone.
 
-Without a webhook, the bot posts instead, and the player is written at the end: `🧭 Base: \`120, 64, -340\` ~ *[Steve]*`. The same happens through the webhook for players whose name contains "discord" or "clyde", since Discord doesn't accept those as author names.
+Without a webhook, the bot posts instead, and the player is written at the end: `🧭 Base: \`120, 64, -340\` ~ *[Steve]*`. The same happens through the webhook for players whose name contains "discord" or "clyde", or is "everyone" or "here", since Discord doesn't accept those as author names.
 
 ## Setup
 

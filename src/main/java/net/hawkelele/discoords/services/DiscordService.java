@@ -17,6 +17,9 @@ import java.util.concurrent.CompletionException;
 
 // Posts either through the bot or through a webhook, never both
 public class DiscordService {
+    // Past this, a message waiting on Discord's rate limit is dropped instead of posted late
+    private static final long WEBHOOK_TIMEOUT = 60_000;
+
     private final TextChannel channel;
     private final JDAWebhookClient webhook;
 
@@ -39,17 +42,22 @@ public class DiscordService {
     }
 
     public static DiscordService connectWebhook(String url) {
-        return connectWebhook(url, null);
+        return connectWebhook(url, null, WEBHOOK_TIMEOUT);
     }
 
-    // The HTTP client is only passed in by tests
     static DiscordService connectWebhook(String url, OkHttpClient http) {
+        return connectWebhook(url, http, WEBHOOK_TIMEOUT);
+    }
+
+    // The HTTP client and the timeout are only passed in by tests
+    static DiscordService connectWebhook(String url, OkHttpClient http, long timeout) {
         JDAWebhookClient webhook = new WebhookClientBuilder(url)
                 .setHttpClient(http)
                 .setWait(false)
                 .setDaemon(true)
                 .setAllowedMentions(AllowedMentions.none())
                 .buildJDA();
+        webhook.setTimeout(timeout);
 
         return new DiscordService(null, webhook);
     }

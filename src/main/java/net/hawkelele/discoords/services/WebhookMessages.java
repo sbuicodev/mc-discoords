@@ -26,6 +26,6 @@ public final class WebhookMessages {
 
     private static boolean isRejectedName(String player) {
         String name = player.toLowerCase();
-        return name.contains("discord") || name.contains("clyde");
+        return name.contains("discord") || name.contains("clyde") || name.equals("everyone") || name.equals("here");
     }
 }

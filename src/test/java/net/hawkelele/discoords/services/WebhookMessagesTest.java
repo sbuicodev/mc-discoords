@@ -31,7 +31,7 @@ class WebhookMessagesTest {
 
     @Test
     void namesDiscordRejectsAreWrittenInTheText() {
-        for (String player : new String[]{"discordfan", "Mr_CLYDE"}) {
+        for (String player : new String[]{"discordfan", "Mr_CLYDE", "here", "Everyone"}) {
             WebhookMessage message = WebhookMessages.of(TEXT, player);
 
             assertNull(message.getUsername());

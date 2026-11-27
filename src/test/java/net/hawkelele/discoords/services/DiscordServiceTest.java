@@ -78,6 +78,16 @@ class DiscordServiceTest {
     }
 
     @Test
+    void rateLimitGivesUpAfterTheTimeout() {
+        discord = DiscordService.connectWebhook(URL, answering(429, "{}", "Retry-After", "1"), 200);
+
+        long start = System.currentTimeMillis();
+        discord.sendMessage("hi", "Steve").join();
+
+        assertTrue(System.currentTimeMillis() - start < 5000);
+    }
+
+    @Test
     void rejectsOtherUrls() {
         assertThrows(IllegalArgumentException.class, () -> DiscordService.connectWebhook("https://example.com/hook"));
     }
@@ -89,16 +99,19 @@ class DiscordServiceTest {
         assertEquals("webhook 123", discord.describe());
     }
 
-    private OkHttpClient answering(int code, String body) {
+    private OkHttpClient answering(int code, String body, String... headers) {
         return new OkHttpClient.Builder().addInterceptor(chain -> {
             requests.add(chain.request());
-            return new Response.Builder()
+            Response.Builder response = new Response.Builder()
                     .request(chain.request())
                     .protocol(Protocol.HTTP_1_1)
                     .code(code)
                     .message("")
-                    .body(ResponseBody.create(body, MediaType.get("application/json")))
-                    .build();
+                    .body(ResponseBody.create(body, MediaType.get("application/json")));
+            for (int i = 0; i + 1 < headers.length; i += 2) {
+                response.header(headers[i], headers[i + 1]);
+            }
+            return response.build();
         }).build();
     }
 }
