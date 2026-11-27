@@ -33,13 +33,11 @@ public class SendCoordinatesCommand implements Command {
         }
 
         Vec3 pos = player.position();
-        String coordinatesText = Math.round(pos.x) + ", " + Math.round(pos.y) + ", " + Math.round(pos.z);
+        String dimension = player.level().dimension().identifier().toString();
+        String text = CoordinatesMessage.of(name, pos.x, pos.y, pos.z, dimension);
+        String coordinatesText = CoordinatesMessage.coordinates(pos.x, pos.y, pos.z);
 
-        String dimension = DimensionNames.of(player.level().dimension().identifier().toString());
-
-        String icon = "🧭";
-
-        discord.sendMessage(icon + " " + name + ": `" + coordinatesText + "` (" + dimension + ") ~ *[" + player.getName().getString() + "]*");
+        discord.sendMessage(text, player.getName().getString());
         source.sendSuccess(() -> Component.literal("Coordinates saved as " + name + ": " + coordinatesText), false);
 
         return 1;

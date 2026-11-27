@@ -36,12 +36,12 @@ public class DiscordService {
         return channel.getName();
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String text, String player) {
         if (channel == null) {
             return;
         }
 
-        channel.sendMessage(message).queue();
+        channel.sendMessage(MessageSignature.of(text, player)).queue();
     }
 
 }
