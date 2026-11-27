@@ -42,6 +42,9 @@ dependencies {
     bundled("net.dv8tion:JDA:${property("deps.jda")}") {
         exclude(module = "opus-java") // Voice support, unused
     }
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 loom {
@@ -89,6 +92,10 @@ tasks {
         val name = project.property("mod.id")
         inputs.property("mod_id", name)
         from("../../LICENSE") { rename { "${it}_$name" } }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     register<Copy>("buildAndCollect") {
