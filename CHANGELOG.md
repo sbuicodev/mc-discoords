@@ -3,6 +3,14 @@
 Each section is named after the release tag it belongs to (`## <mod.version>`).
 The release workflow publishes the section matching the pushed tag as the GitHub release notes.
 
+## 1.1.1
+
+### Added
+- A README with what Discoords does, how to set up the bot, and the configuration options.
+
+### Changed
+- `/dc` messages include the dimension, written as Overworld, Nether or The End (other dimensions by their id).
+
 ## 1.1.0
 
 ### Added

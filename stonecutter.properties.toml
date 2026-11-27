@@ -2,7 +2,7 @@
 mod.id = "discoords"
 mod.name = "Discoords"
 mod.group = "net.hawkelele.discoords"
-mod.version = "1.1.0"
+mod.version = "1.1.1"
 
 deps.fabric_loader = "0.20.1"
 deps.jda = "6.2.0"
