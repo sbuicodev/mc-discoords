@@ -54,6 +54,16 @@ class ConfigProviderTest {
         assertTrue(Files.readString(file.toPath()).contains("\"webhook\""));
     }
 
+    @Test
+    void leavesCompleteFileUntouched() throws IOException {
+        String json = "{\"token\":\"t\",\"guild\":\"g\",\"channel\":\"c\",\"webhook\":\"w\"}";
+        File file = write(json);
+
+        new ConfigProvider(file).load();
+
+        assertEquals(json, Files.readString(file.toPath()));
+    }
+
     private File write(String json) throws IOException {
         Path path = dir.resolve("discoords.json");
         Files.writeString(path, json);

@@ -28,6 +28,8 @@ Without a webhook, the bot posts instead, and the player is written at the end: 
 1. In Discord, open the channel's settings, then **Integrations → Webhooks → New Webhook**.
 2. Click **Copy Webhook URL**. Keep it secret: anyone with it can post to the channel.
 
+To post into a thread or a forum post, add `?thread_id=<the thread's id>` to the URL.
+
 ### 2. Install and configure
 
 1. Put the Discoords jar in the server's `mods` folder, with [Fabric API](https://modrinth.com/mod/fabric-api).

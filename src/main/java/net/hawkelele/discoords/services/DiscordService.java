@@ -51,13 +51,17 @@ public class DiscordService {
 
     // The HTTP client and the timeout are only passed in by tests
     static DiscordService connectWebhook(String url, OkHttpClient http, long timeout) {
-        JDAWebhookClient webhook = new WebhookClientBuilder(url)
+        JDAWebhookClient webhook = new WebhookClientBuilder(WebhookUrl.withoutQuery(url))
+                .setThreadId(WebhookUrl.threadId(url))
                 .setHttpClient(http)
                 .setWait(false)
                 .setDaemon(true)
                 .setAllowedMentions(AllowedMentions.none())
                 .buildJDA();
         webhook.setTimeout(timeout);
+        // Failures are logged once, by sendMessage, without the library's stack traces
+        webhook.setErrorHandler((client, message, e) -> {
+        });
 
         return new DiscordService(null, webhook);
     }
@@ -95,9 +99,11 @@ public class DiscordService {
     // The library's errors hold the status code and Discord's answer, not the URL
     static String failureText(Throwable e) {
         Throwable cause = e instanceof CompletionException && e.getCause() != null ? e.getCause() : e;
-        return cause.getMessage();
+        return cause.getMessage() != null ? cause.getMessage() : cause.getClass().getSimpleName();
     }
 
+    // Not called when the server stops: in singleplayer that happens at every world exit, and /dc
+    // has to keep working in the next world. The client's threads don't keep the game running.
     public void close() {
         if (webhook != null) {
             webhook.close();

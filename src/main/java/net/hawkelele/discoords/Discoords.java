@@ -7,6 +7,7 @@ import net.hawkelele.discoords.config.Config;
 import net.hawkelele.discoords.config.ConfigProvider;
 import net.hawkelele.discoords.registry.CommandRegistry;
 import net.hawkelele.discoords.services.DiscordService;
+import net.hawkelele.discoords.services.PostingMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,16 +39,18 @@ public class Discoords implements ModInitializer {
                 return null;
             }
 
-            if (config.usesWebhook()) {
-                try {
+            switch (PostingMode.of(config)) {
+                case WEBHOOK:
                     return DiscordService.connectWebhook(config.webhook.trim());
-                } catch (IllegalArgumentException e) {
+                case BOT_INSTEAD_OF_WEBHOOK:
                     // Never log the URL itself: it holds the webhook's token
                     LOGGER.error("\"webhook\" in {} isn't a Discord webhook URL; posting through the bot instead", ConfigProvider.CONFIG_FILE);
-                }
+                    break;
+                case BOT:
+                    LOGGER.warn("Posting through the bot is deprecated and will be removed in a future version; set \"webhook\" in {}", ConfigProvider.CONFIG_FILE);
+                    break;
             }
 
-            LOGGER.warn("Posting through the bot is deprecated and will be removed in a future version; set \"webhook\" in {}", ConfigProvider.CONFIG_FILE);
             return DiscordService.connect(config.token, config.guild, config.channel);
         } catch (InvalidTokenException e) {
             // Never log the token itself: logs get shared

@@ -88,6 +88,22 @@ class DiscordServiceTest {
     }
 
     @Test
+    void postsToTheThreadInTheUrl() {
+        discord = DiscordService.connectWebhook(URL + "?thread_id=456", answering(204, ""));
+
+        discord.sendMessage("hi", "Steve").join();
+
+        Request request = requests.get(0);
+        assertTrue(request.url().encodedPath().endsWith("/webhooks/123/secret-token"));
+        assertEquals("456", request.url().queryParameter("thread_id"));
+    }
+
+    @Test
+    void failureTextWithoutMessageNamesTheError() {
+        assertEquals("IOException", DiscordService.failureText(new CompletionException(new IOException())));
+    }
+
+    @Test
     void rejectsOtherUrls() {
         assertThrows(IllegalArgumentException.class, () -> DiscordService.connectWebhook("https://example.com/hook"));
     }
