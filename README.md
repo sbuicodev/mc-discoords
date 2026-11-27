@@ -68,12 +68,15 @@ The jars end up in `versions/<minecraft>/build/libs/`; `./gradlew buildAndCollec
 
 ## AI usage disclaimer
 
-AI was not used to develop Discoords' features. It was used here to
-
-- set up the GitHub workflows that build and release the mod
-- migrate the build to Stonecutter, to support several Minecraft versions
-- write the initial version of this README
-- help with other minor changes
+> [!WARNING]
+> No generative AI was used to create Discoords' assets, and AI was not used to develop its features. AI is used as an assistant, for things like:
+>
+> - setting up the GitHub workflows that build and release the mod
+> - migrating the build to Stonecutter, to support several Minecraft versions
+> - writing the initial version of this README
+> - other minor changes
+>
+> Every change is thoroughly reviewed by a human.
 
 ## License
 
