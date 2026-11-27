@@ -3,6 +3,11 @@
 Each section is named after the release tag it belongs to (`## <mod.version>`).
 The release workflow publishes the section matching the pushed tag as the GitHub release notes.
 
+## 1.1.2
+
+### Fixed
+- When Discord rejects the bot token, the log no longer prints the token, since server logs often get shared.
+
 ## 1.1.1
 
 ### Added
