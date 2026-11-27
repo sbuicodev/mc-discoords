@@ -39,8 +39,8 @@ public class Discoords implements ModInitializer {
             }
             return DiscordService.connect(config.token, config.guild, config.channel);
         } catch (InvalidTokenException e) {
-            assert (config != null);
-            LOGGER.error("Invalid token passed to the Discord API: {}", config.token);
+            // Never log the token itself: logs get shared
+            LOGGER.error("Discord rejected the bot token; check \"token\" in {}", ConfigProvider.CONFIG_FILE);
         } catch (Exception e) {
             LOGGER.error("Couldn't connect to Discord", e);
         }
