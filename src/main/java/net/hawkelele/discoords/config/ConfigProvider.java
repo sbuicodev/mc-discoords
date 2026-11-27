@@ -7,11 +7,19 @@ import java.io.*;
 
 public class ConfigProvider {
     public static final String CONFIG_FILE = "config/discoords.json";
-    private final File file = new File(CONFIG_FILE);
+    private final File file;
+
+    public ConfigProvider() {
+        this(new File(CONFIG_FILE));
+    }
+
+    public ConfigProvider(File file) {
+        this.file = file;
+    }
 
     public Config load() {
         if (file.exists()) {
-            return readConfigFromFile();
+            return readAndUpdateConfigFile();
         }
 
         if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
@@ -20,7 +28,7 @@ public class ConfigProvider {
 
         try {
             if (!file.createNewFile()) {
-                return readConfigFromFile();
+                return readAndUpdateConfigFile();
             }
         } catch (IOException e) {
             return null;
@@ -40,6 +48,17 @@ public class ConfigProvider {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    // Writing the file back adds the options added since it was created
+    private Config readAndUpdateConfigFile() {
+        Config config = readConfigFromFile();
+
+        if (config != null) {
+            writeConfigToFile(config);
+        }
+
+        return config;
     }
 
     private Config readConfigFromFile() {

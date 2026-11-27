@@ -4,4 +4,9 @@ public class Config {
     public String token = "your_bot_token_here";
     public String guild = "your_guild_id_here";
     public String channel = "your_channel_id_here";
+    public String webhook = "";
+
+    public boolean usesWebhook() {
+        return webhook != null && !webhook.isBlank();
+    }
 }
